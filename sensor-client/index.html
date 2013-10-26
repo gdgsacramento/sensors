@@ -1,0 +1,63 @@
+
+<html>
+<head>
+
+    <style type="text/css">
+
+        .sensor-color {
+            width: 200px;
+            height: 200px;
+            background: #345566;
+
+        }
+
+    </style>
+<script src="http://192.168.43.22:8080/socket.io/socket.io.js"></script>
+<script src="./jquery-1.10.1.min.js"></script>
+
+<script>
+
+    var socket = io.connect("http://192.168.43.22:8080");
+
+    socket.on("connect", function() {
+
+        console.log("DEBUG: foo bar");
+
+        socket.emit('sensor', {"foo": "bar"});
+    });
+
+
+    socket.on("foo", function(data) {
+
+        console.log("DEBUG: xxxx : ");
+        var v = Math.floor(data.lux);
+
+        if(data.src === "A") {
+
+            $("#sensor1").html(data.lux);
+            $("#sensor1").css("background", "rgb(" + v + "," + v + "," + v + ")");
+
+        }
+        else if(data.src === "B") {
+
+            $("#sensor2").html(data.lux);
+            $("#sensor2").css("background", "rgb(" + v + "," + v + "," + v + ")");
+        }
+    });
+
+
+    socket.on('error', function(err) {
+
+        console.log("DEBUG: error");
+    });
+
+</script>
+
+</head>
+<body>
+
+    <div id="sensor1" class="sensor-color"></div>
+    <div id="sensor2" class="sensor-color"></div>
+
+</body>
+</html>
